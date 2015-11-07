@@ -15,7 +15,7 @@ In order to run this program on your environment, you may need to make the follo
 (2) Line 27, 39: load the input files // you should transfer the input files "QuestionA1_data_6" and "stopwords" to your HDFS
 and modify the paths
 
-(3) Line 79, 104: write to output files // you may modify the paths to save the model and results
+(3) Line 81, 106: write to output files // you may modify the paths to save the model and results
 
 
 Running the code:
