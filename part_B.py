@@ -25,11 +25,8 @@ nPartition = 1000
 nFeature = 50000
 ## Step 1: Load documents (one per line) and parse the data
 file = 'hdfs://10.0.1.105:8020/assignment3/QuestionA1_data_6'
-#file = 'hdfs://10.0.1.105:8020/assignment3/tweets'
-#file = 'tweets.txt'
 
 ## Step 2: Word Cleaning and Processing
-#documents = sc.textFile(file).map(lambda line: line.split())
 def processTweet(line):
 	line = re.sub("[^A-Za-z']+", ' ', line)
 	line = line.replace('http', ' ')
@@ -58,7 +55,6 @@ hashingTF = HashingTF(nFeature)   # default is 2^20
 tf = hashingTF.transform(documents)
 tf.cache()
 idf = IDF(minDocFreq=5).fit(tf)
-#idf = IDF().fit(tf)
 tfidf = idf.transform(tf).repartition(nPartition)
 tf.unpersist()
 del idf
@@ -66,9 +62,7 @@ tfidf.cache()
 
 ## Step 4: Clustering with k-mean algorithm
 
-#pool = [10, 100, 1000]
-
-pool = [1000]
+pool = [10, 100, 1000]
 for nCluster in pool:
 	# Build the model (cluster the data)
 	kmeans_model = KMeans.train(tfidf, nCluster, maxIterations=10, runs=1, initializationMode="random")
@@ -87,11 +81,6 @@ for nCluster in pool:
 	kmeans_model.save(sc, "hdfs://10.0.1.105:8020/assignment3/km_model_50K_"+str(nCluster))
 
 	## Step 5: Prediction
-#nCluster = 10
-	#kmeans_model = KMeansModel.load(sc, "hdfs://10.0.1.105:8020/assignment3/km_model_"+str(nCluster))
-#kmeans_model = KMeansModel.load(sc, "km_model_" + str(nCluster))
-#kmeans_model.centers()
-
 	def dataClusterPairs(data, cluster_id):
 		result = []
 		for i in xrange(len(data)):
